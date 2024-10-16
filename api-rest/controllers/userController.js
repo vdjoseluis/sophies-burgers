@@ -96,24 +96,41 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserByData = async (req, res) => {
   try {
-    const userId = parseInt(req.params.id, 10);
-    if (req.user.role !== "admin" && req.user.id !== userId) {
-      return res.status(403).json({
-        error: "No tienes permisos para ver este perfil",
-      });
+    const { phone, id } = req.body;
+    const userRole = req.user.role;
+    const userIdFromToken = req.user.id;
+
+    let user;
+
+    if (id) {
+      user = await User.findByPk(id);
+    } else if (phone) {
+      user = await User.findOne({ where: { phone } });
+    } else {
+      return res
+        .status(400)
+        .json({
+          error: "Debes proporcionar un 'id' o 'phone' para buscar el usuario.",
+        });
     }
-    const user = await User.findByPk(userId);
+
     if (!user) {
-      return res.status(404).json({
-        error: "Usuario no encontrado",
+      return res.status(404).json({ error: "Usuario no encontrado." });
+    }
+
+    if (userRole !== "admin" && user.id !== userIdFromToken) {
+      return res.status(403).json({
+        error: "No tienes permisos para ver los datos de este usuario.",
       });
     }
+
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({
-      error: "Error al obtener el usuario",
+      error: "Error al obtener los datos del usuario.",
+      details: error.message,
     });
   }
 };
@@ -121,9 +138,9 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10); // Pasar a entero para la comparación
-    const params = {...req.body};
-    (params.id) && delete params.id;
-    
+    const params = { ...req.body };
+    params.id && delete params.id;
+
     if (req.user.role !== "admin" && req.user.id !== userId) {
       return res.status(403).json({
         error: "No tienes permisos para actualizar este usuario",
@@ -179,7 +196,7 @@ module.exports = {
   registerUser,
   loginUser,
   getAllUsers,
-  getUserById,
+  getUserByData,
   updateUser,
   deleteUser,
 };

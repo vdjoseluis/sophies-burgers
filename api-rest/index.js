@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const UserRoutes = require("./routes/userRoutes");
 const ProductRoutes = require("./routes/productRoutes");
+const TicketRoutes = require("./routes/ticketRoutes");
+const BookingRoutes = require("./routes/bookingRoutes");
 const { syncDatabase } = require("./models/index");
 
 console.log("Node API booted");
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/user", UserRoutes);
 app.use("/api/product", ProductRoutes);
+app.use("/api/ticket", TicketRoutes);
+app.use("/api/booking", BookingRoutes);
 
 // PRUEBA CONEXION A LA BASE DE DATOS
 app.get("/", (req, res) => {

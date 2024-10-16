@@ -4,6 +4,7 @@ const userController = require("../controllers/userController");
 const {
   registerValidation,
   loginValidation,
+  searchValidation,
 } = require("../validators/userValidation");
 const {
   authMiddleware,
@@ -14,10 +15,12 @@ const {
 router.post("/register", registerValidation, userController.registerUser);
 router.post("/login", loginValidation, userController.loginUser);
 
+// Rutas compartidas: propias o role: admin
+router.get("/search", searchValidation, authMiddleware, userController.getUserByData);
+router.put("/update/:id", authMiddleware, userController.updateUser);
+router.delete("/delete/:id", authMiddleware, userController.deleteUser);
+
 // Rutas privadas o role: admin
 router.get("/list", authMiddleware, adminMiddleware, userController.getAllUsers);
-router.get("/:id", authMiddleware, userController.getUserById);
-router.put("/update/:id", authMiddleware, userController.updateUser);
-router.delete("/delete/:id", authMiddleware, adminMiddleware, userController.deleteUser);
 
 module.exports = router;

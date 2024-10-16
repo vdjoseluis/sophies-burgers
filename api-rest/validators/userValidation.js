@@ -15,7 +15,13 @@ const loginValidation = [
     body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
 ];
 
+const searchValidation = [
+    body('id').optional().isInt().withMessage('Id debe ser un entero'),
+    body('phone').optional().isMobilePhone('any').withMessage('El número debe ser un teléfono válido').trim().escape(),
+]
+
 module.exports = {
     registerValidation, 
-    loginValidation
+    loginValidation,
+    searchValidation
 }

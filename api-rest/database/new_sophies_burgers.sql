@@ -29,25 +29,28 @@ CREATE TABLE IF NOT EXISTS bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     table_id INT,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
+    date_booking DATE NOT NULL,
+    time_booking TIME NOT NULL,
     people INT NOT NULL,
     CONSTRAINT fk_user
         FOREIGN KEY (user_id) 
         REFERENCES users(id),
     CONSTRAINT fk_table
         FOREIGN KEY (table_id)
-        REFERENCES tables(id)
+        REFERENCES tables(id),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('active', 'cancelled', 'done') NOT NULL DEFAULT 'active',
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS tickets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,    
     user_id INT,
     CONSTRAINT fk_userT FOREIGN KEY (user_id) REFERENCES users(id),
     total FLOAT NOT NULL,
-    delivery_option VARCHAR(20) NOT NULL
+    delivery_option ENUM('pickup', 'delivery') NOT NULL DEFAULT 'pickup',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS items (

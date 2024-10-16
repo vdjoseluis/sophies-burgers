@@ -56,5 +56,9 @@ module.exports = {
     sequelize,
     User: db.User,
     Product: db.Product,
+    Ticket: db.Ticket,
+    Item: db.Item,
+    Table: db.Table,
+    Booking: db.Booking,
     syncDatabase,
 };
