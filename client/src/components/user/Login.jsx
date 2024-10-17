@@ -46,13 +46,13 @@ const Login = () => {
         />
       </form>
       <p className="mt-8 mx-6">
-        ¿ No tienes cuenta ?{" "}
-        <Link to="/register" className="text-red-800 font-semibold">
+        ¿ No tienes cuenta ?
+        <Link to="/register" className="text-red-800 font-semibold hover:text-red-600">
           Regístrate
         </Link>
       </p>
       <p className="text-right mx-6">
-        <Link to="/recordar" className="text-red-800 font-semibold">
+        <Link to="/recordar" className="text-red-800 font-semibold hover:text-red-600">
           ¿ Has olvidado tu contraseña ?
         </Link>
       </p>

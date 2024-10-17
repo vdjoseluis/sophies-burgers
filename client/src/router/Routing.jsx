@@ -21,9 +21,7 @@ const Routing = () => {
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
         <ScrollToTop />
-        <Header className="" />
-
-        {/* Contenido desplazable */}
+        <Header />
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<MainContent />} />

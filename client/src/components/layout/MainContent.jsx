@@ -6,7 +6,6 @@ import TextArticle from "../content/TextArticle";
 const MainContent = () => {
   return (
     <>
-      {/* <CarouselImages /> */}
       <DishesSection />
       <TextArticle />
       <DiscoverSection />

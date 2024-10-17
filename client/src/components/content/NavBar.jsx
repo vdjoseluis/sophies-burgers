@@ -14,10 +14,10 @@ const NavBar = () => {
 
   const navItems = [
     {text: "Carta", link: "/carta" },
-    {text: "Menús", link: "/menus" },
-    {text: "Socios", link: "/socios" },
+    {text: "Menús", link: "/menus" },    
     {text: "Pedidos", link: "/pedidos" },
     {text: "Reservas", link: "/reservas" },
+    {text: "Socios", link: "/socios" },
   ];
   return (
     <nav>
