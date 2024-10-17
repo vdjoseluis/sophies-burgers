@@ -7,5 +7,8 @@ const { body } = require("express-validator");
 // Rutas para usuarios
 router.post("/create", authMiddleware, ticketController.createTicket);
 
+// Rutas protegidas role:admin
+router.get("/list", authMiddleware, adminMiddleware, ticketController.getAllTickets);
+
 
 module.exports = router;

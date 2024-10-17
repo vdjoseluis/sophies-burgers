@@ -1,5 +1,6 @@
 {
   "name": "api-rest-sophies-burgers",
+  "author": "José Luis Vásquez Drouet",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -7,9 +8,8 @@
     "start": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
-  "description": "API-REST con Node, Express, JWT y MySQL",
+  "description": "API-REST con Node, Express, JWT y Sequelize - MySQL",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
