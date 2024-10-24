@@ -15,76 +15,76 @@ const ApplyJob = () => {
   };
 
   return (
-    <section className="bg-gray-300 p-4 md:p-6 mt-6 mb-10 rounded-xl shadow-md shadow-gray-800 max-w-md md:max-w-3xl mx-auto opacity-85 items-center">
-      <h1 className="mb-6 text-3xl font-semibold text-center">
+    <section className="bg-gray-900 bg-opacity-75 p-4 md:p-6 mt-6 mb-10 rounded-xl shadow-md shadow-gray-800 max-w-md md:max-w-3xl mx-auto items-center">
+      <h1 className="mb-6 text-3xl font-semibold text-center text-amber-200">
         Únete a nuestra gran familia
       </h1>
-      <p className="text-center text-lg mb-6">
+      <p className="text-center text-lg mb-6 text-gray-100">
         Rellena este formulario de inscripción y contactaremos contigo lo antes
         posible.
       </p>
-      <form className="flex flex-col gap-6 px-6">
+      <form className="flex flex-col gap-6 px-6 text-gray-100">
         <div className="flex w-full justify-between flex-col md:flex-row gap-6">
           <div className="flex w-full">
-            <UserCircleIcon className="h-6 w-6 me-2" />
+            <UserCircleIcon className="icon" />
             <input
               type="text"
               name="firstname"
               placeholder="Nombre"
-              className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+              className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
               autoFocus
               required
             />
           </div>
           <div className="flex w-full">
-            <UserPlusIcon className="h-6 w-6 me-2" />
+            <UserPlusIcon className="icon" />
             <input
               type="text"
               name="lastname"
               placeholder="Apellidos"
-              className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+              className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
               required
             />
           </div>
         </div>
         <div className="flex w-full">
-          <MapPinIcon className="h-6 w-6 me-2" />
+          <MapPinIcon className="icon" />
           <input
             type="text"
             name="address"
             placeholder="Dirección"
-            className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+            className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
             required
           />
         </div>
         <div className="flex w-full justify-between flex-col md:flex-row gap-6">
           <div className="flex w-full md:w-[40%]">
-            <PhoneIcon className="h-6 w-6 me-2" />
+            <PhoneIcon className="icon" />
             <input
               type="tel"
               name="phone"
               placeholder="Teléfono móvil"
-              className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+              className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
               required
             />
           </div>
           <div className="flex w-full md:w-[60%]">
-            <AtSymbolIcon className="h-6 w-6 me-2" />
+            <AtSymbolIcon className="icon" />
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+              className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
               required
             />
           </div>
         </div>
         <div className="flex w-full">
-          <PaperClipIcon className="h-6 w-6 me-2" />
+          <PaperClipIcon className="icon" />
           <input
             type="file"
             name="file0"
-            className="w-full rounded-lg px-2 shadow-md shadow-gray-800 focus:outline-none focus:bg-emerald-100"
+            className="w-full border rounded-lg p-2 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
           />
         </div>
 
@@ -92,12 +92,12 @@ const ApplyJob = () => {
           <input
             type="submit"
             value="Enviar"
-            className="px-6 py-2 bg-emerald-400 rounded-xl text-gray-900 font-semibold shadow-md shadow-gray-800 hover:bg-emerald-500 hover:text-gray-100 transition duration-300"
+            className="w-32 py-2 rounded-xl bg-green-600 text-white hover:bg-green-400 hover:text-gray-900 font-semibold shadow-md shadow-gray-800 transition duration-300"
           />
           <input
             type="reset"
             value="Cancelar"
-            className="px-6 py-2 bg-red-400 rounded-xl text-gray-900 font-semibold shadow-md shadow-gray-800 hover:bg-red-500 hover:text-gray-100 transition duration-300"
+            className="w-32 py-2 bg-red-600 rounded-xl text-white font-semibold shadow-md shadow-gray-800 hover:bg-red-500 hover:text-gray-900 transition duration-300"
             onClick={handleClick}
           />
         </div>

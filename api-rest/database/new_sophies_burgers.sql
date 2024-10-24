@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     CONSTRAINT fk_userT FOREIGN KEY (user_id) REFERENCES users(id),
     total FLOAT NOT NULL,
     delivery_option ENUM('pickup', 'delivery') NOT NULL DEFAULT 'pickup',
+    status ENUM('pending', 'done') NOT NULL DEFAULT 'pending',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

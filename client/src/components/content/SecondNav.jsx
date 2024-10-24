@@ -1,6 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const SecondNav = () => {
+  const {auth} = useAuth();
+
   const navItems = [
     { text: "Conócenos", link: "/acerca" },
     { text: "Contacto", link: "/contacto" },
@@ -8,8 +11,8 @@ const SecondNav = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between w-full px-6 py-2 text-emerald-400 ">
-      <ul className="flex justify-center space-x-6 sm:text-lg xl:text-xl">
+    <nav className="flex items-center justify-between w-full sm:px-6 text-yellow-600 ">
+      <ul className="flex justify-center space-x-6 sm:text-md xl:text-lg">
         {navItems.map((item) => (
           <li key={item.text}>
             <NavLink
@@ -21,7 +24,9 @@ const SecondNav = () => {
           </li>
         ))}
       </ul>
-      <Link to="/login" className="px-4 sm:text-lg xl:text-xl hover:bg-emerald-400 rounded-xl m-2 duration-300 hover:text-gray-900">Login</Link>
+      <Link to={auth.id ? "/perfil" : "/login"} state={auth.id ? {action: "profile"} : {}} className="sm:px-4 sm:text-lg xl:text-xl font-semibold hover:bg-yellow-600 rounded-xl m-2 duration-300 hover:text-gray-900">
+      {auth.firstname ? `${auth.role}: ${auth.firstname}` : "Login"}
+      </Link>
     </nav>
   );
 };

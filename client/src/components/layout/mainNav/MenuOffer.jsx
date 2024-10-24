@@ -1,5 +1,5 @@
-import carta from "../../assets/img/carta.png";
-import TextArticle from "../content/TextArticle";
+import carta from "../../../assets/img/carta.png";
+import TextArticle from "../../content/TextArticle";
 const MenuOffer = () => {
   return (
     <>{/* p-8 flex flex-col items-center gap-6 mb-10 */}

@@ -6,8 +6,8 @@ import {Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="fixed bottom-0 w-full flex justify-center items-center p-2 sm:p-4 flex-wrap gap-5 bg-gray-800">
-      <p className="text-emerald-100 text-sm">Copyright &copy; 2024 Sophie&apos;s Burgers</p>   
+    <footer className="fixed bottom-0 w-full flex justify-center items-center p-2 flex-wrap gap-5 bg-gray-800">
+      <p className="text-white text-sm">Copyright &copy; 2024 Sophie&apos;s Burgers</p>   
       <div className="flex justify-center items-center gap-8">
         <Link to="http://instagram.com" target="_blank">
           <img
@@ -38,7 +38,7 @@ const Footer = () => {
           />
         </Link>
       </div>
-      <p className="text-emerald-100 hidden md:block text-sm">by José Luis Vásquez Drouet</p>
+      <p className="text-white hidden md:block text-sm">by José Luis Vásquez Drouet</p>
     </footer>
   );
 };

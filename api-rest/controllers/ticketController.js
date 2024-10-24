@@ -46,7 +46,8 @@ const createTicket = async (req, res) => {
       await ticket.update({ total }); // Actualiza el total en el ticket
   
       // Responder al cliente con el ticket y los items
-      res.status(201).json({
+      res.status(201).send({
+        status: "success",
         message: "Ticket y items creados con éxito",
         ticket,
         items: itemData
@@ -61,8 +62,31 @@ const createTicket = async (req, res) => {
 
   const getAllTickets = async (req, res) => {
     try {
-      const tickets = await Ticket.findAll();
-      res.status(200).json(tickets);
+      const tickets = await Ticket.findAll({ order: [["createdAt", 'DESC']] });
+      res.status(200).send({
+        status: "success",
+        tickets
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+  const changeStatus = async (req, res) => {
+    try {
+      const ticketId = req.params.id;
+      const newStatus = req.body.status;
+
+      const ticket = await Ticket.findByPk(ticketId);
+      if (!ticket) {
+        return res.status(404).json({ error: "Ticket no encontrado" });
+      }
+      await ticket.update({ status: newStatus });
+      res.status(200).send({
+        status: "success",
+        message: "Ticket actualizado correctamente",
+        ticket
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -70,5 +94,6 @@ const createTicket = async (req, res) => {
   
   module.exports = {
     createTicket,
-    getAllTickets
+    getAllTickets,
+    changeStatus
   };

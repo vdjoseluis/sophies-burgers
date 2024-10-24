@@ -17,6 +17,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("delivery", "pickup"),
         allowNull: false,
       },
+      status: {
+        type: DataTypes.ENUM("pending", "done"),
+        defaultValue: "pending",
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+      }
     },
     {
       tableName: "tickets",

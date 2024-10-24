@@ -29,7 +29,8 @@ const registerUser = async (req, res) => {
 
     console.log("nuevo usuario creado: ", newUser.id);
 
-    res.status(200).json({
+    res.status(200).send({
+      status: "success",
       message: "Usuario creado correctamente",
       user: newUser,
     });
@@ -69,7 +70,8 @@ const loginUser = async (req, res) => {
       role: user.role,
     });
 
-    res.status(200).json({
+    res.status(200).send({
+      status: "success",
       message: "Usuario autenticado correctamente",
       user: {
         id: user.id,
@@ -98,7 +100,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserByData = async (req, res) => {
   try {
-    const { phone, id } = req.body;
+    const { id, phone } = req.query;
     const userRole = req.user.role;
     const userIdFromToken = req.user.id;
 
@@ -109,11 +111,9 @@ const getUserByData = async (req, res) => {
     } else if (phone) {
       user = await User.findOne({ where: { phone } });
     } else {
-      return res
-        .status(400)
-        .json({
-          error: "Debes proporcionar un 'id' o 'phone' para buscar el usuario.",
-        });
+      return res.status(400).json({
+        error: "Debes proporcionar un 'id' o 'phone' para buscar el usuario.",
+      });
     }
 
     if (!user) {
@@ -126,12 +126,14 @@ const getUserByData = async (req, res) => {
       });
     }
 
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({
-      error: "Error al obtener los datos del usuario.",
-      details: error.message,
+    return res.status(200).send({
+      status: "success",
+      user,
     });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error al obtener los datos del usuario." });
   }
 };
 
@@ -154,7 +156,8 @@ const updateUser = async (req, res) => {
       });
     }
     await user.update(params);
-    res.status(200).json({
+    res.status(200).send({
+      status: "success",
       message: "Usuario actualizado correctamente",
       user,
     });
@@ -181,7 +184,8 @@ const deleteUser = async (req, res) => {
       });
     }
     await user.destroy();
-    res.status(200).json({
+    res.status(200).send({
+      status: "success",
       message: "Usuario eliminado correctamente",
       user,
     });

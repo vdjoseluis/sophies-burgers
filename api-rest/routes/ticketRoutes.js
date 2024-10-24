@@ -9,6 +9,7 @@ router.post("/create", authMiddleware, ticketController.createTicket);
 
 // Rutas protegidas role:admin
 router.get("/list", authMiddleware, adminMiddleware, ticketController.getAllTickets);
+router.put("/update/:id", authMiddleware, adminMiddleware, ticketController.changeStatus);
 
 
 module.exports = router;

@@ -6,7 +6,7 @@ import ImgsContainer from "./ImgsContainer";
 import { useNavigate } from "react-router-dom";
 
 const DishesSection = () => {
-  const images = [dish1, dish2, dish3, dish4];
+  const imgsDishes = [{src: dish1}, {src: dish2}, {src: dish3}, {src: dish4}];
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -15,19 +15,19 @@ const DishesSection = () => {
 
   return (
     <section className="text-gray-600 p-8 flex flex-col items-center gap-8">
-      <h1 className="text-center text-4xl lg:text-5xl font-semibold text-gray-800">
+      <h1 className="text-center text-4xl lg:text-5xl font-semibold text-gray-800 tracking-wide text-shadow">
         Descubre nuestra carta
       </h1>
       <button
         type="button"
         id="btnToCarta"
-        className="bg-red-600 border border-red-500 text-white py-2 px-4 rounded-md hover:bg-red-500 transition duration-200 shadow-lg shadow-gray-800"
+        className="w-56 py-2 bg-red-600 rounded-xl text-white font-semibold shadow-md shadow-gray-800 hover:bg-red-500 hover:text-gray-900 transition duration-300"
         onClick={handleClick}
       >
         Todos nuestros platos &gt;&gt;
       </button>
 
-      <ImgsContainer images={images} />
+      <ImgsContainer images={imgsDishes} />
     </section>
   );
 };
