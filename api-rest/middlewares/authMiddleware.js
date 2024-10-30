@@ -3,15 +3,7 @@ require("dotenv").config();
 const secret = process.env.JWT_KEY;
 
 const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(403).json({
-      error: "Token no proporcionado",
-    });
-  }
-
-  const token = authHeader; 
+  const token = req.headers.authorization;
 
   if (!token) {
     return res.status(403).json({
@@ -32,7 +24,7 @@ const authMiddleware = (req, res, next) => {
 
 const adminMiddleware = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
-    next(); // Si el usuario es admin, continúa
+    next(); 
   } else {
     return res
       .status(403)

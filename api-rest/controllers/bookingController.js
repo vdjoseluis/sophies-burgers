@@ -36,7 +36,8 @@ const createBooking = async (req, res) => {
     availableTable.reserved = 1; // Cambiar el estado a reservado
     await availableTable.save();
 
-    res.status(201).json({
+    res.status(201).send({
+      status: "success",
       message: "Reserva creada con éxito",
       booking,
     });
@@ -57,10 +58,10 @@ const getMyActiveBookings = async (req, res) => {
     });
 
     if (!bookings || bookings.length === 0) {
-      return res.status(404).json({ error: "No tienes reservas" });
+      return res.status(200).send({ message: "No tienes reservas", bookings });
     }
 
-    res.status(200).json(bookings);
+    res.status(200).send({ status: "success", bookings});
   } catch (error) {
     res.status(500).json({ error: "Error al obtener la reserva" });
   }
@@ -68,6 +69,7 @@ const getMyActiveBookings = async (req, res) => {
 
 const changeStatus = async (req, res) => {
   try {
+    const userId = req.user.id;
     const bookingId = req.params.id;
     const newStatus = req.body.status;
     const userRole = req.user.role;
@@ -107,9 +109,13 @@ const changeStatus = async (req, res) => {
     table.reserved = 0;
     await table.save();
 
+    const bookings = await Booking.findAll({
+      where: { user_id: userId, status: "active" },
+    });
+
     res
       .status(200)
-      .json({ message: `Reserva actualizada correctamente a ${newStatus}` });
+      .json({ message: `Reserva actualizada correctamente a ${newStatus}`, bookings});
   } catch (error) {
     res.status(500).json({ error: "Error al actualizar la reserva" });
   }
@@ -118,7 +124,7 @@ const changeStatus = async (req, res) => {
 const getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.findAll();
-    res.status(200).json(bookings);
+    res.status(200).send({status: "success", bookings});
   } catch (error) {
     res.status(500).json({ error: "Error al obtener las reservas" });
   }

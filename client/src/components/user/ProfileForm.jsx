@@ -5,40 +5,55 @@ import {
   PhoneIcon,
   UserCircleIcon,
   UserPlusIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useForm from "../../hooks/useForm";
 import { ApiUrl } from "../../helpers/ApiUrl";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import { deleteUser } from "../../helpers/ConfirmActions";
 
 const ProfileForm = () => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const { form, changed, setForm } = useForm({});
-  const [saved, setSaved] = useState("not_saved");
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { action } = location.state || { action: "profile" };
+  const { action, userData } = location.state || { action: "profile" };
 
   useEffect(() => {
-    if (auth && action !== "register") {
+    if (userData) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ...userData,
+      }));
+    } else if (auth && Object.keys(auth).length > 0 && action !== "register") {
       setForm((prevForm) => ({
         ...prevForm,
         ...auth,
       }));
     }
-  }, [auth, setForm, action]);
+  }, [auth, setAuth, setForm, action, userData]);
 
   const handleCancel = () => {
     navigate("/");
   };
   const handleDelete = () => {
-    navigate("/confirmar", {
-      state: {
-        textTitle: "¿Estas seguro de eliminar tu cuenta?",
-        action: "delete",
-      },
+    Swal.fire({
+      title: "¿ Estás seguro de eliminar tu cuenta ?",
+      text: "Después no podrás recuperarla",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {        
+        deleteUser((userData ? userData.id : auth.id), navigate, auth);
+      }
     });
   };
 
@@ -54,52 +69,82 @@ const ProfileForm = () => {
       });
       const data = await request.json();
       if (data.status === "success") {
-        setSaved("saved");
-        setTimeout(() => {
+        Swal.fire({
+          title: `Bienvenid@, ${form.firstname}`,
+          text: "Ya puedes iniciar sesión",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
           navigate("/login");
-        }, 2000);
+        });
       } else {
-        setSaved("error");
+        Swal.fire({
+          title: "Error en los datos del usuario. Por favor, intenta de nuevo",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } else {
-      const request = await fetch(ApiUrl.url + "user/update/" + auth.id, {
-        method: "PUT",
-        body: JSON.stringify(form),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      });
+      const request = await fetch(
+        ApiUrl.url + "user/update/" + (userData ? userData.id : auth.id),
+        {
+          method: "PUT",
+          body: JSON.stringify(form),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
 
       const data = await request.json();
       if (data.status === "success") {
-        setSaved("updated");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        Swal.fire({
+          title: "Actualizado correctamente",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
+          navigate("/");
+        });
       } else {
-        setSaved("error");
+        Swal.fire({
+          title: "Error en los datos del usuario. Por favor, intenta de nuevo",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     }
   };
 
   return (
     <section className="bg-gray-900 bg-opacity-75 p-4 md:p-6 mt-6 mb-10 rounded-xl shadow-md shadow-gray-800 max-w-md md:max-w-3xl mx-auto items-center">
-      {saved === "saved" && (
-        <p className="bg-green-500 border border-green-600 text-white mb-6 p-2">
-          ¡ Bienvenid@, {form.firstname}, registrado correctamente !
-        </p>
-      )}
-      {saved === "updated" && (
-        <p className="bg-green-500 border border-green-600 text-white mb-6 p-2">
-          ¡ Actualizado correctamente !
-        </p>
-      )}
-      <h1 className="mb-6 text-3xl font-semibold text-center text-yellow-500 pb-6 border-b-2 border-yellow-500">
-        {action === "register"
-          ? "Registro de nuevo socio"
-          : "Datos del usuario"}
-      </h1>
+      <div className=" flex justify-between items-center mb-6 pb-6 border-b-2 border-yellow-500">
+        {action !== "register" && (
+          <>
+            {!userData && (
+              <span
+                className="flex gap-2 items-center rounded-lg px-4 text-red-500 text-lg hover:bg-red-500 hover:text-white cursor-pointer"
+                onClick={() => {
+                  navigate("/logout");
+                }}
+              >
+                <XCircleIcon className="h-10 w-10" />
+                Cerrar sesión
+              </span>
+            )}
+          </>
+        )}
+
+        <h1 className="text-3xl font-semibold text-yellow-500 ">
+          {action === "register"
+            ? "Registro de nuevo socio"
+            : "Datos del usuario"}
+        </h1>
+      </div>
       <form className="flex flex-col gap-10 px-6" onSubmit={handleSubmit}>
         <div className="flex w-full justify-between flex-col md:flex-row gap-6">
           <div className="flex w-full md:w-[55%] items-center">
@@ -186,7 +231,7 @@ const ProfileForm = () => {
               className="rounded-md text-amber-400 font-semibold text-lg hover:bg-red-400 hover:text-white hover:px-6"
               onClick={handleDelete}
             >
-              Darse de baja
+              {userData ? 'Eliminar cuenta' : 'Darse de baja'}
             </button>
           )}
         </div>
@@ -207,21 +252,11 @@ const ProfileForm = () => {
               />
             </>
           ) : (
-            <>
-              <input
-                type="submit"
-                value="Actualizar"
-                className="w-32 py-2 rounded-xl bg-green-600 text-white hover:bg-green-400 hover:text-gray-900 font-semibold shadow-md shadow-gray-800 transition duration-300"
-              />
-              <input
-                type="reset"
-                value="Cerrar sesión"
-                className="w-32 py-2 bg-red-600 rounded-xl text-white font-semibold shadow-md shadow-gray-800 hover:bg-red-500 hover:text-gray-900 transition duration-300"
-                onClick={() => {
-                  navigate("/logout");
-                }}
-              />
-            </>
+            <input
+              type="submit"
+              value="Actualizar"
+              className="w-32 py-2 rounded-xl bg-green-600 text-white hover:bg-green-400 hover:text-gray-900 font-semibold shadow-md shadow-gray-800 transition duration-300"
+            />
           )}
         </div>
       </form>

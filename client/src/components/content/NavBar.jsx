@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
-import logo from "../../assets/logoSophie.png";
-import useAuth from "../../hooks/useAuth";
+import logo from "../../assets/logo.svg";
 
 const NavBar = () => {
-  const { auth } = useAuth();
   const [nav, setNav] = useState(false);
   const { pathname } = useLocation();
 
@@ -21,12 +19,11 @@ const NavBar = () => {
     { text: "Reservas", link: "/reservas" },
     { text: "Socios", link: "/socios" },
   ];
-  (auth) && navItems.pop();
 
   return (
     <nav>
-      {/* Menú de navegación para pantallas grandes */}
-      <ul className="hidden sm:flex">
+      {/* Menú de navegación */}
+      <ul className="hidden md:flex">
         {navItems
           .filter((item) => item.link !== pathname)
           .map((item, index) => (
@@ -42,7 +39,7 @@ const NavBar = () => {
       </ul>
 
       {/* Botón para abrir/cerrar el menú móvil */}
-      <div onClick={handleNav} className="block sm:hidden p-4">
+      <div onClick={handleNav} className="block md:hidden p-4">
         {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
       </div>
 
@@ -50,7 +47,7 @@ const NavBar = () => {
       {nav && (
         <div
           className="fixed inset-0 bg-gray-900 opacity-80 z-10"
-          onClick={handleNav} // Para cerrar el menú al hacer clic en el overlay
+          onClick={handleNav} 
         ></div>
       )}
 
@@ -66,9 +63,6 @@ const NavBar = () => {
           <img src={logo} alt="logo" className="h-20 rounded-full" />
         </NavLink>
 
-        {/* <h1 className="text-emerald-400 text-xl font-semibold m-4">
-      Sophie&apos;s Burgers
-    </h1> */}
         {navItems.map((item, index) => (
           <li
             key={index}

@@ -1,16 +1,25 @@
-const FormatDateTime = (dateString) => {
+// Función para formatear la fecha
+const formatDate = (dateString) => {
   const date = new Date(dateString);
-  const formattedDate = date.toLocaleDateString("es-ES", {
+  return date.toLocaleDateString("es-ES", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
-  const formattedTime = date.toLocaleTimeString("es-ES", {
+};
+
+// Función para formatear la hora
+const formatTime = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("es-ES", {
     hour: "2-digit",
     minute: "2-digit",
   });
-
-  return `${formattedDate} ${formattedTime}`;
 };
 
-export default FormatDateTime;
+// Función combinada que usa ambas
+const formatDateTime = (dateString) => {
+  return `${formatDate(dateString)} - ${formatTime(dateString)}`;
+};
+
+export { formatDate, formatTime, formatDateTime };

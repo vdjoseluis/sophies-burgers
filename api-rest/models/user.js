@@ -49,16 +49,16 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         tableName: 'users',
-        timestamps: false,  //Para manejar createdAt y updatedAt automáticamente
+        timestamps: false, 
     });
 
-    // Hook para hashear la contraseña antes de crear un usuario
+    // Encriptar la contraseña antes de crear un usuario
     User.beforeCreate(async (user, options) => {
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt);
     });
 
-    // Hook para hashear la contraseña antes de actualizar un usuario, si se modifica
+    // Encriptar la contraseña antes de actualizar un usuario, si se modifica
     User.beforeUpdate(async (user, options) => {
         if (user.changed('password')) {
             const salt = await bcrypt.genSalt(10);

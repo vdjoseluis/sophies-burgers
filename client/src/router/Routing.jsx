@@ -18,7 +18,6 @@ import ProfileForm from "../components/user/ProfileForm";
 import Remember from "../components/user/Remember";
 import ScrollToTopButton from "../helpers/ScrollToTopButton";
 import { AuthProvider } from "../context/AuthProvider";
-import ConfirmCard from "../components/content/ConfirmCard";
 const Routing = () => {
   const auth =
     localStorage.getItem("user") !== null &&
@@ -34,10 +33,7 @@ const Routing = () => {
               <Route path="/" element={<Home />} />
               <Route path="/carta" element={<Carta />} />
               <Route path="/menus" element={<Menus />} />
-              <Route
-                path="/socios"
-                element={auth ? <Navigate to="/" /> : <Partners />}
-              />
+              <Route path="/socios" element={<Partners />} />
               <Route path="/pedidos" element={<Orders />} />
               <Route path="/reservas" element={<Bookings />} />
 
@@ -45,14 +41,11 @@ const Routing = () => {
                 path="/login"
                 element={auth ? <Navigate to="/" /> : <Login />}
               />
+              <Route path="/restore-password/:id" element={<Remember />} />
               <Route path="/logout" element={<Logout />} />
 
               <Route path="/empleo" element={<ApplyJob />} />
               <Route path="/perfil" element={<ProfileForm />} />
-              <Route
-                path="/confirmar"
-                element={!auth ? <Navigate to="/" /> : <ConfirmCard />}
-              />
               <Route path="/perfil/recordar" element={<Remember />} />
 
               <Route path="/acerca" element={<AboutUs />} />

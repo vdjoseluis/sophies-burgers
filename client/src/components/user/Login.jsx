@@ -1,15 +1,13 @@
-import { useState } from "react";
-import { AtSymbolIcon } from "@heroicons/react/24/outline";
-import { KeyIcon } from "@heroicons/react/24/outline";
+import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
 import { ApiUrl } from "../../helpers/ApiUrl";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const { form, changed } = useForm({});
-  const [logged, setLogged] = useState("not_logged");
-  const { setAuth } = useAuth();
+  const { setAuth, authUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const previousUrl = location.state?.previousUrl || "/";
@@ -19,49 +17,49 @@ const Login = () => {
 
     const userToLogin = form;
 
-    const request = await fetch(ApiUrl.url + "user/login", {
-      method: "POST",
-      body: JSON.stringify(userToLogin),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const request = await fetch(ApiUrl.url + "user/login", {
+        method: "POST",
+        body: JSON.stringify(userToLogin),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const data = await request.json();
-    if (data.status === "success") {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setAuth(data.user);
-      setLogged("login");
-      setTimeout(() => {
-        navigate(previousUrl, { replace: true });
-        window.location.reload();
-      }, 2000);
-    } else {
-      setLogged("error");
+      const data = await request.json();
+
+      if (data.status === "success") {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setAuth(data.user);
+        await authUser();
+
+        Swal.fire({
+          title: `Bienvenid@, ${data.user.name}`,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2500,
+        }).then(() => {
+          navigate(previousUrl, { replace: true });
+        });
+      } else {
+        Swal.fire({
+          title: `Usuario o contraseña incorrectos`,
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      console.error("Error en el inicio de sesión:", error);
     }
   };
+
   return (
     <section className="bg-gray-900 bg-opacity-75 p-4 md:p-6 mt-6 mb-10 rounded-xl shadow-md shadow-gray-800 max-w-sm sm:max-w-xl mx-auto items-center">
       <h1 className="mb-6 text-3xl font-semibold text-center text-yellow-500">
         Inicia sesión
       </h1>
-      {logged === "login" ? (
-        <p className="bg-green-500 border border-green-600 text-white mb-6 p-2">
-          ¡ Usuario identificado correctamente !
-        </p>
-      ) : (
-        ""
-      )}
-
-      {logged === "error" ? (
-        <p className="bg-red-500 border border-red-600 text-white mb-6 p-2">
-          ¡ Usuario o contraseña incorrectos !
-        </p>
-      ) : (
-        ""
-      )}
-
       <form className="flex flex-col gap-10 px-6" onSubmit={handleLogin}>
         <div className="input-group flex gap-10 justify-center">
           <AtSymbolIcon className="icon" />

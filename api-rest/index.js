@@ -6,6 +6,7 @@ const UserRoutes = require("./routes/userRoutes");
 const ProductRoutes = require("./routes/productRoutes");
 const TicketRoutes = require("./routes/ticketRoutes");
 const BookingRoutes = require("./routes/bookingRoutes");
+const EmailRoutes = require("./routes/emailRoutes");
 const { syncDatabase } = require("./models/index");
 
 console.log("Node API booted");
@@ -22,6 +23,7 @@ app.use("/api/user", UserRoutes);
 app.use("/api/product", ProductRoutes);
 app.use("/api/ticket", TicketRoutes);
 app.use("/api/booking", BookingRoutes);
+app.use("/api/contact", EmailRoutes);
 
 // PRUEBA CONEXION A LA BASE DE DATOS
 app.get("/", (req, res) => {

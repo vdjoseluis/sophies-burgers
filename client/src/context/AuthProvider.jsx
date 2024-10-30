@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import { ApiUrl } from "../helpers/ApiUrl";
-
 import PropTypes from "prop-types";
+import { ApiUrl } from "../helpers/ApiUrl";
 
 const AuthContext = createContext();
 
@@ -19,26 +18,37 @@ export const AuthProvider = ({ children }) => {
 
     if (!token || !user) {
       setLoading(false);
-      return false;
+      return;
     }
 
-    const userData = JSON.parse(user);
-    const userId = userData.id;
-
-    const request = await fetch(`${ApiUrl.url}user/search?id=${userId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    const data = await request.json();
-    setAuth(data.user);
-    setLoading(false);
+    try {
+      const userData = JSON.parse(user);
+      const response = await fetch(`${ApiUrl.url}user/search?id=${userData.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAuth(data.user);
+      } else {
+        setAuth({});
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+    } catch (error) {
+      console.error("Error al autenticar el usuario:", error);
+      setAuth({});
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, loading }}>
+    <AuthContext.Provider value={{ auth, setAuth, loading, authUser }}>
       {children}
     </AuthContext.Provider>
   );

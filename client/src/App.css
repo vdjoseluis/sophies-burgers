@@ -52,13 +52,15 @@ body::before {
     text-shadow: 0 0 10px rgb(127, 218, 127), 0 0 20px rgb(127, 218, 127), 0 0 30px rgb(127, 218, 127)
 }
 
+.titleHeader {    
+    text-shadow: 0 2px 0 #bd910e, 0 4px 0 #7c6213, 0 4px 0 #cb9c12, 3px 6px 10px rgba(0,0,0,0.1), 3px 6px 5px rgba(0,0,0,0.3);
+}
+
 /* h1 {
     text-shadow: 0 0 10px rgb(127, 218, 127), 0 0 20px rgb(127, 218, 127), 0 0 30px rgb(127, 218, 127);
 }
 
-.titleHeader {    
-    text-shadow: 0 2px 0 #8b6e15, 0 4px 0 #7c6213, 0 6px 0 #6e5611, 3px 8px 15px rgba(0,0,0,0.1), 3px 8px 5px rgba(0,0,0,0.3);
-}
+
  */
 
 /* html, body {

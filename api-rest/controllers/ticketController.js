@@ -62,7 +62,7 @@ const createTicket = async (req, res) => {
 
   const getAllTickets = async (req, res) => {
     try {
-      const tickets = await Ticket.findAll({ order: [["createdAt", 'DESC']] });
+      const tickets = await Ticket.findAll({ order: [["createdAt"]] });
       res.status(200).send({
         status: "success",
         tickets

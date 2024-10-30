@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS items (
     quantity INT NOT NULL
 );
 
-INSERT INTO products (product, price) VALUES
+INSERT INTO products (name, price) VALUES
     ('Hamburguesa Clásica', 5.99),
     ('Hamburguesa con Queso', 6.99),
     ('Hamburguesa Doble', 7.99),

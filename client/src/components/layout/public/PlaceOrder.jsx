@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { ApiUrl } from "../../../helpers/ApiUrl";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { placeOrder } from "../../../helpers/ConfirmActions";
+import useAuth from "../../../hooks/useAuth";
+
 const PlaceOrder = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("pickup");
   const [quantities, setQuantities] = useState({});
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,7 +26,7 @@ const PlaceOrder = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Error en el servidor");
         }
 
         const data = await response.json();
@@ -32,7 +37,6 @@ const PlaceOrder = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
   if (loading) {
@@ -61,15 +65,35 @@ const PlaceOrder = () => {
     0
   );
 
-  const handleClick = () => {
-    navigate("/confirmar", {
-      state: {
-        selectedOption,
-        textTitle: "¿ Estás seguro de realizar tu pedido ?",
-        action: "order",
-        orderItems,
-        total,
-      },
+  const handleClick = (orderItems, total) => {
+    Swal.fire({
+      title: "¿ Estás seguro de realizar tu pedido ?",
+      text: "Después no podrás recuperarla",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      html: `
+      <ul class="text-right me-14">
+            ${orderItems
+              .map(
+                (item) => `
+                <li>
+                   ${item.name} x ${item.quantity} = ${item.price.toFixed(2)}€
+                </li>
+            `
+              )
+              .join("")}
+          </ul>
+          <br>
+          <p class="text-right font-semibold me-14">
+            Total a pagar: ${total.toFixed(2)} €
+          </p>`,
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        placeOrder(orderItems, selectedOption, navigate);
+      }
     });
   };
 
@@ -79,10 +103,10 @@ const PlaceOrder = () => {
 
   return (
     <section className="bg-gray-900 bg-opacity-85 p-4 md:p-6 mt-6 mb-20 rounded-xl shadow-md shadow-gray-800 max-w-[80%] xl:max-w-[60%] mx-auto items-center text-center">
-      <h1 className="mb-6 text-2xl text-center text-yellow-600 border-b-2 pb-4">
-        Escoje una opción para tu pedido:
+      <h1 className="mb-6 sm:text-2xl text-center text-yellow-600 border-b-2 pb-4">
+        {auth.deliveryEnabled ? "Escoje una opción para tu pedido:" : "¡ Haz tu pedido !"}
       </h1>
-      <label className="inline-flex items-center px-4">
+      <label className="inline-flex items-center sm:px-4">
         <input
           type="radio"
           name="options"
@@ -93,17 +117,20 @@ const PlaceOrder = () => {
         />
         <span className="mx-2 text-gray-100">Recogerlo tu mismo</span>
       </label>
-      <label className="inline-flex items-center px-4">
-        <input
-          type="radio"
-          name="options"
-          value="delivery"
-          checked={selectedOption === "delivery"}
-          className="form-radio h-5 w-5"
-          onChange={handleOptionChange}
-        />
-        <span className="mx-2 text-gray-100">Recibirlo en casa</span>
-      </label>
+      {auth.deliveryEnabled && (
+        <label className="inline-flex items-center sm:px-4">
+          <input
+            type="radio"
+            name="options"
+            value="delivery"
+            checked={selectedOption === "delivery"}
+            className="form-radio h-5 w-5"
+            onChange={handleOptionChange}
+          />
+          <span className="mx-2 text-gray-100">Recibirlo en casa</span>
+        </label>
+      )}
+
       <table className="min-w-full border-collapse border border-gray-200 my-6">
         <thead className="bg-amber-600">
           <tr>
@@ -138,7 +165,7 @@ const PlaceOrder = () => {
         <button
           className="w-52 py-2 bg-green-400 rounded-xl text-gray-900 font-semibold shadow-md shadow-gray-800 hover:bg-green-600 hover:text-white transition duration-300"
           name="btnLoginOrder"
-          onClick={handleClick}
+          onClick={() => handleClick(orderItems, total)}
         >
           Realizar pedido
         </button>
