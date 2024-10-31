@@ -42,6 +42,7 @@ router.post("/login", loginValidation, userController.loginUser);
 router.post("/upload-cv", upload.single("file0"), userController.uploadCv);
 router.get("/remember", userController.getUserByEmail);
 router.put("/restore-password/:id", userController.restorePassword);
+router.post("/validate-address", userController.validateAddress);
 
 // Rutas compartidas: propias o role: admin
 router.get(

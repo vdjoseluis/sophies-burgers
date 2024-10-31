@@ -1,8 +1,49 @@
+require("dotenv").config();
+
 const { User } = require("../models/index");
 const generateToken = require("../services/jwt");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const fs = require("fs").promises;
+
+const validateAddress = async (req, res) => {
+  const { address } = req.body;
+  
+  try {
+    const response = await fetch(
+      `https://addressvalidation.googleapis.com/v1:validateAddress?key=${process.env.GOOGLE_API_KEY}`, 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address: { addressLines: [address], regionCode: "ES" },
+        }),
+      }
+    );
+
+    const data = await response.json();
+    
+    if (!data.result.verdict.addressComplete) {
+      throw new Error("La dirección no tiene calle, número y población.");
+    }
+    const formattedAddress = data.result.address.formattedAddress;
+    const locality = data.result.address.addressComponents.find(component => component.componentType === 'locality').componentName;
+
+    return res.status(200).json({
+      status: "success",
+      formattedAddress,
+      locality: locality.text,
+    });
+  } catch (error) {
+    console.error("Error al validar la dirección:", error.message);
+    return res.status(400).json({
+      status: "error",
+      message: error.message,
+    })
+  }
+};
 
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -15,7 +56,7 @@ const registerUser = async (req, res) => {
   console.log("Datos del body: ", req.body);
   try {
     console.log("buscando usuario existente con email: ", params.email);
-    const existingUser = await User.findOne({ where: { email: params.email }});
+    const existingUser = await User.findOne({ where: { email: params.email } });
     if (existingUser) {
       console.log("usuario ya existe", params.email);
       return res.status(400).json({
@@ -23,6 +64,7 @@ const registerUser = async (req, res) => {
         message: "El usuario ya existe",
       });
     }
+
     console.log("NO EXISTE, creando un nuevo usuario");
 
     const newUser = await User.create(params);
@@ -50,7 +92,10 @@ const loginUser = async (req, res) => {
 
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne(
+      { where: { email } },
+      (attributes = { exclude: ["password"] })
+    );
     if (!user) {
       return res.status(400).json({
         status: "error",
@@ -77,7 +122,7 @@ const loginUser = async (req, res) => {
         id: user.id,
         name: user.firstname,
         role: user.role,
-      }, 
+      },
       token,
     });
   } catch (error) {
@@ -139,8 +184,11 @@ const getUserByData = async (req, res) => {
 
 const getUserByEmail = async (req, res) => {
   try {
-    const {email} = req.query;
-    const user = await User.findOne({ where: { email }, attributes: ["id", "firstname", "lastname", "email"] }); 
+    const { email } = req.query;
+    const user = await User.findOne({
+      where: { email },
+      attributes: ["id", "firstname", "lastname", "email"],
+    });
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -161,7 +209,7 @@ const updateUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const userId = parseInt(req.params.id, 10); 
+    const userId = parseInt(req.params.id, 10);
     const params = { ...req.body };
     params.id && delete params.id;
 
@@ -191,9 +239,9 @@ const updateUser = async (req, res) => {
 };
 
 const restorePassword = async (req, res) => {
-  try {    
-    const {id} = req.params;
-    const {password} = req.body;
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
     if (!password) {
       return res.status(400).json({
         error: "La contraseña es requerida",
@@ -205,7 +253,7 @@ const restorePassword = async (req, res) => {
         error: "Usuario no encontrado",
       });
     }
-    await user.update({ password: password }); 
+    await user.update({ password: password });
     await user.save();
     res.status(200).send({
       status: "success",
@@ -241,7 +289,7 @@ const deleteUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: "Error al eliminar el usuario"
+      error: "Error al eliminar el usuario",
     });
   }
 };
@@ -249,9 +297,11 @@ const deleteUser = async (req, res) => {
 const uploadCv = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "No se ha seleccionado un archivo" });
+      return res
+        .status(400)
+        .json({ error: "No se ha seleccionado un archivo" });
     }
-    const fileExt = req.file.mimetype.split('/')[1];
+    const fileExt = req.file.mimetype.split("/")[1];
 
     if (fileExt !== "pdf") {
       const filePath = req.file.path;
@@ -260,22 +310,22 @@ const uploadCv = async (req, res) => {
         .status(400)
         .json({ error: "El formato del archivo debe ser PDF" });
     }
-    
+
     return res.status(200).json({
       status: "success",
       message: "CV subido correctamente",
-      filename: req.file.filename
-    })
-    
+      filename: req.file.filename,
+    });
   } catch (error) {
     res.status(500).json({
-      error: "Error al subir el archivo"
+      error: "Error al subir el archivo",
     });
   }
-}
+};
 
 module.exports = {
   registerUser,
+  validateAddress,
   loginUser,
   getAllUsers,
   getUserByData,
@@ -283,5 +333,5 @@ module.exports = {
   updateUser,
   restorePassword,
   deleteUser,
-  uploadCv
+  uploadCv,
 };

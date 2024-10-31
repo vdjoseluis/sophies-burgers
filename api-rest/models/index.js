@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: 'mysql',
-        logging: false, // Desactiva el logging de Sequelize
+        logging: false, 
     }
 );
 
@@ -45,7 +45,7 @@ db.Sequelize = Sequelize;
 
 const syncDatabase = async () => {
     try {
-        await sequelize.sync({ force: false }); // Cambia a true si quieres reiniciar las tablas force:false
+        await sequelize.sync({ force: false });
         console.log('La base de datos se ha sincronizado correctamente.');
     } catch (error) {
         console.error('Error al sincronizar la base de datos:', error);

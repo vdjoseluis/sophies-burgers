@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         },        
     }, {
         tableName: 'products',
-        timestamps: false,  //Para manejar createdAt y updatedAt automáticamente
+        timestamps: false,  
     });    
 
     return Product;

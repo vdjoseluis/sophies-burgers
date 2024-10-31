@@ -66,7 +66,6 @@ const createValidationExcluding = (fieldsToExclude) =>
     (rule) => !fieldsToExclude.includes(rule.builder.fields[0])
   );
 
-// Inicializar `updateValidation` con campos excluidos
 const contactValidation = createValidationExcluding([
   "password",
   "firstname",
@@ -75,7 +74,6 @@ const contactValidation = createValidationExcluding([
   "phone",
 ]);
 
-// Añadir validación adicional para el nombre completo
 contactValidation.push(
   body("name")
     .matches(/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+)+$/)

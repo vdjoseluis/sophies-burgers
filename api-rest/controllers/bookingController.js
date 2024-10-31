@@ -3,18 +3,17 @@ const { Op } = require("sequelize");
 
 const createBooking = async (req, res) => {
   try {
-    const user_id = req.user.id; // Obtener el ID del usuario desde el token
+    const user_id = req.user.id; 
     const { date_booking, time_booking, people } = req.body;
 
-    // Buscar la primera mesa disponible que tenga suficiente capacidad
     const availableTable = await Table.findOne({
       where: {
-        reserved: 0, // La mesa no debe estar reservada
+        reserved: 0, 
         people: {
-          [Op.gte]: people, // Debe tener suficiente capacidad
+          [Op.gte]: people, 
         },
       },
-      order: [["people", "ASC"]], // Ordenar por capacidad (de menor a mayor)
+      order: [["people", "ASC"]], 
     });
 
     if (!availableTable) {
@@ -26,14 +25,14 @@ const createBooking = async (req, res) => {
     // Crear la reserva
     const booking = await Booking.create({
       user_id,
-      table_id: availableTable.id, // Asignar la mesa encontrada
+      table_id: availableTable.id, 
       date_booking,
       time_booking,
       people,
     });
 
     // Marcar la mesa como reservada
-    availableTable.reserved = 1; // Cambiar el estado a reservado
+    availableTable.reserved = 1; 
     await availableTable.save();
 
     res.status(201).send({
@@ -74,7 +73,6 @@ const changeStatus = async (req, res) => {
     const newStatus = req.body.status;
     const userRole = req.user.role;
 
-    // buscar la reserva
     const booking = await Booking.findByPk(bookingId);
     if (!booking) {
       return res.status(404).json({ error: "Reserva no encontrada" });
@@ -86,7 +84,6 @@ const changeStatus = async (req, res) => {
       });
     }
 
-    // validar si el nuevo estado es valido
     if (!["cancelled", "done"].includes(newStatus)) {
       return res.status(400).json({ error: "El nuevo estado no es valido" });
     }
@@ -97,11 +94,9 @@ const changeStatus = async (req, res) => {
         .json({ error: "No tienes permisos para realizar esta accion" });
     }
 
-    // actualizar status de la reserva
     booking.status = newStatus;
     await booking.save();
 
-    // liberar mesa
     const table = await Table.findByPk(booking.table_id);
     if (!table) {
       return res.status(404).json({ error: "Mesa no encontrada" });

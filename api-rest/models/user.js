@@ -52,13 +52,11 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false, 
     });
 
-    // Encriptar la contraseña antes de crear un usuario
     User.beforeCreate(async (user, options) => {
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt);
     });
 
-    // Encriptar la contraseña antes de actualizar un usuario, si se modifica
     User.beforeUpdate(async (user, options) => {
         if (user.changed('password')) {
             const salt = await bcrypt.genSalt(10);

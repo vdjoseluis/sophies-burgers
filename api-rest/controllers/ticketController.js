@@ -2,7 +2,6 @@ const { Ticket, Item, Product } = require("../models/index");
 
 const createTicket = async (req, res) => {
     try {
-      // Obtener user_id del token JWT
       const user_id = req.user.id;
       const { delivery_option, items } = req.body;
   
@@ -13,7 +12,6 @@ const createTicket = async (req, res) => {
       let total = 0;
       const itemData = [];
   
-      // Iterar sobre los items para calcular el total
       for (const item of items) {
         const product = await Product.findByPk(item.product_id);
         if (!product) {
@@ -22,30 +20,25 @@ const createTicket = async (req, res) => {
         const itemTotal = product.price * item.quantity;
         total += itemTotal;
         itemData.push({
-          ticket_id: null, // Este valor se asignará después de crear el ticket
+          ticket_id: null, 
           product_id: item.product_id,
           quantity: item.quantity
         });
       }
   
-      // Crear el ticket
       const ticket = await Ticket.create({
         user_id,
-        delivery_option // Asignamos delivery_option directamente
+        delivery_option 
       });
   
-      // Asignar el ID del ticket a los items
       for (const item of itemData) {
-        item.ticket_id = ticket.id; // Asigna el ID del ticket
+        item.ticket_id = ticket.id; 
       }
   
-      // Crear los items asociados al ticket
-      await Item.bulkCreate(itemData); // Crea los items en la base de datos
+      await Item.bulkCreate(itemData); 
   
-      // Actualizar el total del ticket después de haber creado los items
-      await ticket.update({ total }); // Actualiza el total en el ticket
+      await ticket.update({ total }); 
   
-      // Responder al cliente con el ticket y los items
       res.status(201).send({
         status: "success",
         message: "Ticket y items creados con éxito",
