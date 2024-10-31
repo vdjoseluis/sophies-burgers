@@ -51,72 +51,109 @@ const ProfileForm = () => {
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
     }).then((result) => {
-      if (result.isConfirmed) {        
-        deleteUser((userData ? userData.id : auth.id), navigate, auth);
+      if (result.isConfirmed) {
+        deleteUser(userData ? userData.id : auth.id, navigate, auth);
       }
     });
   };
 
+  const validateAddress = async (address) => {
+    const response = await fetch(ApiUrl.url + "user/validate-address", {
+      method: "POST",
+      body: JSON.stringify({address}),     
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) throw new Error("Dirección no válida");
+    const data = await response.json();
+    return data;
+  };
+
+  const confirmUserData = async (form, validatedAddress) => {
+    return Swal.fire({
+      title: "Revisa si tus datos son correctos",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+      html: `<ul>
+               <li>Nombre: ${form.firstname} ${form.lastname}</li>
+               <li>Correo: ${form.email}</li>
+               <li>Teléfono: ${form.phone}</li>
+               <li>Dirección: ${validatedAddress}</li>
+             </ul>`,
+    });
+  };
+
+  const registerOrUpdateUser = async (url, method, body, navigate) => {
+    const response = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      Swal.fire({
+        title:
+          method === "POST"
+            ? `Bienvenid@, ${body.firstname}`
+            : "Actualizado correctamente",
+        text: method === "POST" ? "Ya puedes iniciar sesión" : "",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 2500,
+      }).then(() => {
+        navigate(method === "POST" ? "/login" : "/");
+      });
+    } else {
+      Swal.fire({
+        title: "Error en los datos del usuario. Por favor, intenta de nuevo",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (action === "register") {
-      const request = await fetch(ApiUrl.url + "user/register", {
-        method: "POST",
-        body: JSON.stringify(form),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await request.json();
-      if (data.status === "success") {
-        Swal.fire({
-          title: `Bienvenid@, ${form.firstname}`,
-          text: "Ya puedes iniciar sesión",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 2500,
-        }).then(() => {
-          navigate("/login");
-        });
-      } else {
-        Swal.fire({
-          title: "Error en los datos del usuario. Por favor, intenta de nuevo",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    } else {
-      const request = await fetch(
-        ApiUrl.url + "user/update/" + (userData ? userData.id : auth.id),
-        {
-          method: "PUT",
-          body: JSON.stringify(form),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
 
-      const data = await request.json();
-      if (data.status === "success") {
-        Swal.fire({
-          title: "Actualizado correctamente",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 2500,
-        }).then(() => {
-          navigate("/");
-        });
-      } else {
-        Swal.fire({
-          title: "Error en los datos del usuario. Por favor, intenta de nuevo",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+    try {
+      const validatedAddress = await validateAddress(form.address);
+      console.log(form.address, validatedAddress);
+
+      const confirmResult = await confirmUserData(form, validatedAddress.formattedAddress);
+      if (!confirmResult.isConfirmed) return;
+
+      form.address = validatedAddress.formattedAddress;
+      if (validatedAddress.locality === "Colmenar" || validatedAddress.locality === "Málaga") {
+        form.deliveryEnabled = true;
       }
+
+      if (action === "register") {
+        await registerOrUpdateUser(
+          ApiUrl.url + "user/register",
+          "POST",
+          form,
+          navigate
+        );
+      } else {
+        const userId = userData ? userData.id : auth.id;
+        await registerOrUpdateUser(
+          ApiUrl.url + `user/update/${userId}`,
+          "PUT",
+          form,
+          navigate
+        );
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
     }
   };
 
@@ -205,7 +242,7 @@ const ProfileForm = () => {
           <input
             type="text"
             name="address"
-            placeholder="Dirección"
+            placeholder="Dirección: Calle nombre, número, localidad"
             className="w-full border rounded-lg p-2 bg-gray-300 shadow-md shadow-gray-800 focus:outline-none focus:border-red-400 focus:text-yellow-800 focus:shadow-amber-500 focus:bg-gray-100"
             value={form.address || ""}
             onChange={changed}
@@ -231,7 +268,7 @@ const ProfileForm = () => {
               className="rounded-md text-amber-400 font-semibold text-lg hover:bg-red-400 hover:text-white hover:px-6"
               onClick={handleDelete}
             >
-              {userData ? 'Eliminar cuenta' : 'Darse de baja'}
+              {userData ? "Eliminar cuenta" : "Darse de baja"}
             </button>
           )}
         </div>

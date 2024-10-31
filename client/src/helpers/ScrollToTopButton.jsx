@@ -4,16 +4,14 @@ import { useState, useEffect } from "react";
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Función para mostrar el botón si el usuario baja más de 300px
   const toggleVisibility = () => {
-    if (window.scrollY > 300) {
+    if (window.scrollY > 250) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
     }
   };
 
-  // Función para ir al inicio de la página
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -22,10 +20,8 @@ const ScrollToTopButton = () => {
   };
 
   useEffect(() => {
-    // Agregar el event listener cuando el usuario hace scroll
     window.addEventListener("scroll", toggleVisibility);
 
-    // Limpiar el event listener cuando se desmonte el componente
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 

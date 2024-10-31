@@ -1,20 +1,4 @@
-/* html {
-    height: 100%;
-    overflow-x: hidden;
-}
-body {    
-    margin: 0;
-    padding: 0;
-    background-image: url('./assets/img/fondo.jpg');  
-    background-size: cover; 
-    background-position: center; 
-    /* background-repeat: no-repeat;  /* Evita que la imagen se repita */
-    /* background: linear-gradient(to right, rgb(251, 244, 244), rgb(210, 209, 209)); 
-    height: 100vh; 
-    width: 100vw; 
-} */
-
- html {
+html {
     height: 100%;  
     overflow-x: hidden;
 }
@@ -48,44 +32,9 @@ body::before {
 }
 
 .text-shadow {
-    /* text-shadow: 4px 4px 2px rgba(18, 198, 168, 0.5); */
     text-shadow: 0 0 10px rgb(127, 218, 127), 0 0 20px rgb(127, 218, 127), 0 0 30px rgb(127, 218, 127)
 }
 
 .titleHeader {    
     text-shadow: 0 2px 0 #bd910e, 0 4px 0 #7c6213, 0 4px 0 #cb9c12, 3px 6px 10px rgba(0,0,0,0.1), 3px 6px 5px rgba(0,0,0,0.3);
 }
-
-/* h1 {
-    text-shadow: 0 0 10px rgb(127, 218, 127), 0 0 20px rgb(127, 218, 127), 0 0 30px rgb(127, 218, 127);
-}
-
-
- */
-
-/* html, body {
-    height: 100%;  Asegura que tanto el html como el body ocupen toda la altura 
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    position: relative;
-    overflow: hidden;  Evita el scroll no deseado si es necesario 
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-image: url('./assets/img/fondo.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.5;  Controla solo la opacidad de la imagen 
-    z-index: -1;  Envía la imagen detrás del contenido 
-}
- */

@@ -8,21 +8,28 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Swal.fire({
-      title: "Cerrando sesión...",
-      timer: 2000,
-      timerProgressBar: true,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    }).then(() => {
+    const logout = async () => {
+      await Swal.fire({
+        title: "Cerrando sesión...",
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      
       localStorage.clear();
       setAuth({});
       authUser();
+
       navigate("/");
-    });
+    };
+
+    logout();
   }, [setAuth, authUser, navigate]);
+
   return null;
 };
+
 
 export default Logout;

@@ -55,7 +55,6 @@ const Routing = () => {
           </div>
 
           <ScrollToTopButton />
-          {/* Footer siempre visible */}
           <Footer />
         </div>
       </AuthProvider>

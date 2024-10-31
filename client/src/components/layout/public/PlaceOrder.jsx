@@ -68,7 +68,6 @@ const PlaceOrder = () => {
   const handleClick = (orderItems, total) => {
     Swal.fire({
       title: "¿ Estás seguro de realizar tu pedido ?",
-      text: "Después no podrás recuperarla",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
