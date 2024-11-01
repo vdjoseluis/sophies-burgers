@@ -91,7 +91,7 @@ const PlaceOrder = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        placeOrder(orderItems, selectedOption, navigate);
+        placeOrder(orderItems, selectedOption, navigate, total);
       }
     });
   };

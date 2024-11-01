@@ -22,7 +22,7 @@ const deleteUser = async (userId, navigate, auth) => {
   }
 };
 
-const placeOrder = async (orderItems, selectedOption, navigate) => {
+const placeOrder = async (orderItems, selectedOption, navigate, total) => {
   const request = await fetch(ApiUrl.url + "ticket/create", {
     method: "POST",
     headers: {
@@ -32,6 +32,7 @@ const placeOrder = async (orderItems, selectedOption, navigate) => {
     body: JSON.stringify({
       delivery_option: selectedOption,
       items: orderItems,
+      total,
     }),
   });
   const data = await request.json();
