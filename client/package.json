@@ -1,5 +1,8 @@
 {
   "name": "sophies-burgers",
+  "displayName": "Sophies Burgers",
+  "author": {
+    "name": "José Luis Vásquez Drouet"},
   "private": true,
   "version": "0.0.0",
   "type": "module",

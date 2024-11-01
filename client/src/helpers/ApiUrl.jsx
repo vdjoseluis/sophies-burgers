@@ -1,3 +1,3 @@
 export const ApiUrl = {
-    url : "http://localhost:3001/api/"
+    url : "https://sophies-burgers.onrender.com/api/"
 };

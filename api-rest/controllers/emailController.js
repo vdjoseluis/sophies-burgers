@@ -67,7 +67,7 @@ const handleRemember = async (req, res) => {
       from: `"Admin Sophie's Burgers" <info@sophiesburgers.com>`,
       to: data.email,
       subject: "Recuperación de tu cuenta de Sophies Burgers",
-      html: `<p>Hola ${data.firstname},</p><p>Gracias por contactarnos. Aquí están tus datos:</p> <ul> <li>Nombre: ${data.firstname} ${data.lastname}</li> <li>Correo: ${data.email}</li> <li><a href="http://localhost:5173/restore-password/${data.id}" target="_blank">Recuperar contraseña</a></li> </ul>`,
+      html: `<p>Hola ${data.firstname},</p><p>Gracias por contactarnos. Aquí están tus datos:</p> <ul> <li>Nombre: ${data.firstname} ${data.lastname}</li> <li>Correo: ${data.email}</li> <li><a href="https://sophies-burgers.vercel.app/restore-password/${data.id}" target="_blank">Recuperar contraseña</a></li> </ul>`,
     });
   } catch (error) {
     console.error("Error enviando el correo:", error);
