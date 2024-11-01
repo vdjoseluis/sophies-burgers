@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.API_PORT || 3000;
 
 // Middleware
-const allowedOrigins = ["https://sophies-burgers.vercel.app"];
+const allowedOrigins = ["https://sophies-burgers.vercel.app", "http://localhost:3000"];
 app.use(cors({
   origin: allowedOrigins,
   methods: "GET,PUT,POST,DELETE",

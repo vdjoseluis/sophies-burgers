@@ -1,14 +1,25 @@
-import Routing from "./router/Routing"
-import "./App.css"
+import { useEffect } from "react";
+import Routing from "./router/Routing";
+import "./App.css";
 
 function App() {
-  
+  useEffect(() => {
+    const handleUnload = () => {
+      localStorage.clear();      
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
 
   return (
-    <div>
+    <>
       <Routing />
-    </div>
-  )
+    </>
+  );
 }
 
-export default App
+export default App;
