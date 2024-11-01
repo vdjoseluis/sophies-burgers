@@ -28,7 +28,8 @@ const createTicket = async (req, res) => {
   
       const ticket = await Ticket.create({
         user_id,
-        delivery_option 
+        delivery_option,
+        total
       });
   
       for (const item of itemData) {

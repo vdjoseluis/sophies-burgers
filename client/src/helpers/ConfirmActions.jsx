@@ -32,7 +32,7 @@ const placeOrder = async (orderItems, selectedOption, navigate, total) => {
     body: JSON.stringify({
       delivery_option: selectedOption,
       items: orderItems,
-      total,
+      total: total,
     }),
   });
   const data = await request.json();
