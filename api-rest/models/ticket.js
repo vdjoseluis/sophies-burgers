@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       total: {
         type: DataTypes.FLOAT,
+        allowNull: false,
       },
       delivery_option: {
         type: DataTypes.ENUM("delivery", "pickup"),

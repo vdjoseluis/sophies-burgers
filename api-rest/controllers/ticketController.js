@@ -25,6 +25,7 @@ const createTicket = async (req, res) => {
           quantity: item.quantity
         });
       }
+      console.log('total= ', total);
   
       const ticket = await Ticket.create({
         user_id,
@@ -37,9 +38,7 @@ const createTicket = async (req, res) => {
       }
   
       await Item.bulkCreate(itemData); 
-  
-      await ticket.update({ total }); 
-  
+    
       res.status(201).send({
         status: "success",
         message: "Ticket y items creados con éxito",
