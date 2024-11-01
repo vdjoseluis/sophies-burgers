@@ -12,7 +12,7 @@ const { syncDatabase } = require("./models/index");
 console.log("Node API booted");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.API_PORT || 3000;
 
 // Middleware
 app.use(cors());
