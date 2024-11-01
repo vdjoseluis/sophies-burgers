@@ -15,7 +15,12 @@ const app = express();
 const PORT = process.env.API_PORT || 3000;
 
 // Middleware
-app.use(cors());
+const allowedOrigins = ["https://sophies-burgers.vercel.app"];
+app.use(cors({
+  origin: allowedOrigins,
+  methods: "GET,PUT,POST,DELETE",
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
