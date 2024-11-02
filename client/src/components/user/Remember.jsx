@@ -12,7 +12,6 @@ const Remember = () => {
     if (location.pathname.startsWith ("/restore-password")) {
       Swal.fire({
         title: "Recuperación de contraseña",
-        text: "Por favor ingresa tu correo para restaurar tu contraseña.",
         input: "password",
         inputPlaceholder: "Contraseña nueva",
         showCancelButton: true,
